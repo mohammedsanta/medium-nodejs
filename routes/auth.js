@@ -1,7 +1,10 @@
 const express = require('express');
+const jwt = require('jsonwebtoken')
 const userModel = require('../models/users');
 
 const Route = express.Router();
+
+const jwtKey = 'jwtSecurityKey';
 
 Route.post('/register',(req,res) => {
 
@@ -13,10 +16,13 @@ Route.post('/register',(req,res) => {
         email: data.email,
     })
 
-    console.log(data)
-
-    res.send('work')
-
+    const token = jwt.sign(data,jwtKey);
+    
+    res.cookie('token',token,{ httpOnly: true})
+    
+    res.send(token)
+    
+    console.log(req.headers.cookie)
 });
 
 
